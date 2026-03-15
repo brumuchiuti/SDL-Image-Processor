@@ -52,8 +52,7 @@ void calculate_histogram(SDL_Surface* surface, int histogram[256]) {
     for (int y = 0; y < surface->h; y++) {
         for (int x = 0; x < surface->w; x++) {
             int offset = (y * surface->pitch) + (x * 4);
-            // Como a imagem já é cinza, podemos ler qualquer canal (ex: Red no offset 0)
-            histogram[pixels[offset]]++; 
+            // TODO: item 4
         }
     }
 }
