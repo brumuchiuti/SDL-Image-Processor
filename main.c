@@ -13,27 +13,29 @@ const char* ALLOWED_EXTENSIONS[] = {
 };
 const int NUM_ALLOWED_EXTENSIONS = sizeof(ALLOWED_EXTENSIONS) / sizeof(ALLOWED_EXTENSIONS[0]);
 
-char *fix_filename(const char *filename) {
-    // ../../ + filename
-    size_t len = strlen(filename);
-    char *fixed_filename = malloc(len + 7); // 7 for "../../" and null terminator
-    if (!fixed_filename) {
-        fprintf(stderr, "Memory allocation failed\n");
-        return NULL;
+bool has_allowed_extension(const char* filename) {
+    const char* extension = strrchr(filename, '.');
+    if (!extension || extension == filename) {
+        return false;
     }
 
-    snprintf(fixed_filename, len + 7, "../../%s", filename);
-    return fixed_filename;
+    extension++; // ignore the dot
+
+    for (int i = 0; i < NUM_ALLOWED_EXTENSIONS; i++) {
+        if (strcmp(extension, ALLOWED_EXTENSIONS[i]) == 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 int load_image(SDL_Surface* surface, const char *filename) {
-    char *fixed_filename = fix_filename(filename);
-    if (!fixed_filename) {
+    if (!has_allowed_extension(filename)) {
+        fprintf(stderr, "Unsupported file format: %s\n", filename);
         return EXIT_FAILURE;
     }
 
-    SDL_Surface* raw_surface = IMG_Load(fixed_filename);
-    free(fixed_filename);
+    SDL_Surface* raw_surface = IMG_Load(filename);
 
     if (raw_surface == NULL) {
         fprintf(stderr, "Failed to load image: %s\n", SDL_GetError());
