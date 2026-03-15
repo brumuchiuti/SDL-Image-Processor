@@ -23,3 +23,10 @@ bool has_allowed_extension(const char* filename) {
     }
     return false;
 }
+
+int from_fps_to_delay_in_ms(int fps) {
+    if (fps <= 0) {
+        return 16; // Default to approximately 60 FPS
+    }
+    return 1000 / fps;
+}

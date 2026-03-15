@@ -10,4 +10,11 @@
  */
 bool has_allowed_extension(const char* filename);
 
+/**
+ * Converts frames per second (FPS) to a delay in milliseconds, which can be used to control the rendering speed of the application.
+ * @param fps The desired frames per second. If fps is less than or equal to 0, a default delay of 16 ms (approximately 60 FPS) is returned.
+ * @return The delay in milliseconds.
+ */
+int from_fps_to_delay_in_ms(int fps);
+
 #endif // UTILS_H

@@ -12,6 +12,7 @@
 #include "ui_controller.h"
 #include "ui_state.h"
 #include "ui_view.h"
+#include "utils.h"
 
 
 int main(int argc, char const *argv[])
@@ -44,7 +45,7 @@ int main(int argc, char const *argv[])
     while (application_state.is_application_running) {
         process_user_interactions(&application_state, &application_view);
         render_ui_view(&application_view, &application_state);
-        SDL_Delay(16); // Pause to achieve approximately 60 frames per second
+        SDL_Delay(from_fps_to_delay_in_ms(60));
     }
 
     cleanup_ui_view(&application_view);
