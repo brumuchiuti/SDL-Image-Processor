@@ -50,16 +50,34 @@ $ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
 
 ## Compilação e Execução
 
-Conceda permissão de execução ao script `run.sh` (necessário apenas na primeira vez):
+Conceda permissão de execução aos scripts (necessário apenas na primeira vez):
 
 ```bash
-$ chmod +x run.sh
+$ chmod +x run.sh debug.sh
 ```
 
-Utilize o script run.sh para compilar e executar o projeto:
+Utilize o script run.sh para compilar no modo `Release` e executar o projeto:
 
 ```bash
-$ ./run.sh
+$ ./run.sh <path/to/image.png>
+```
+
+Exemplo de uso:
+
+```bash
+$ ./run.sh ../images/405.jpg
+```
+
+Ou, para compilar no modo `Debug` com sanitizers habilitados:
+
+```bash
+$ ./debug.sh <path/to/image.png>
+```
+
+Exemplo de uso:
+
+```bash
+$ ./debug.sh ../../images/405.jpg
 ```
 
 ## Resultados
