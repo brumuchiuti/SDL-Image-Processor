@@ -11,6 +11,10 @@
 
 ## Funcionamento
 
+![](docs/image-file-loaded.png)
+
+> Fonte: https://freepascal-meets-sdl.net/rendering-image-files-with-any-format-sdl3_image/
+
 ## Contribuições
 
 1. Clone o repositório do projeto:

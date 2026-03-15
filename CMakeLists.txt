@@ -8,6 +8,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIGURATION>")
 
 # This assumes the SDL source is available in vendored/SDL
 add_subdirectory(vendored/SDL EXCLUDE_FROM_ALL)
+add_subdirectory(vendored/SDL_image EXCLUDE_FROM_ALL)
 
 # Create your game executable target as usual
 add_executable(main WIN32 main.c)
@@ -33,4 +34,4 @@ target_compile_options(main PRIVATE ${COMMON_WARN_FLAGS} ${DEBUG_FLAGS} ${SECURI
 target_link_options(main PRIVATE ${SANITIZERS})
 
 # Link to the actual SDL3 library.
-target_link_libraries(main PRIVATE SDL3::SDL3)
+target_link_libraries(main PRIVATE SDL3::SDL3 SDL3_image::SDL3_image)
