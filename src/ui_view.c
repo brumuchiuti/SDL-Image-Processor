@@ -207,7 +207,7 @@ void render_ui_view(ApplicationView *view, ApplicationState *state)
 
     if (view->ui_font) {
         SDL_Color btn_text = {255, 255, 255, 255};
-        render_text(view, "Processar Imagem",
+        render_text(view, "Equalizar Histograma",
                     view->process_action_button.boundary_rectangle.x + 36.0f,
                     view->process_action_button.boundary_rectangle.y + 16.0f,
                     btn_text);
