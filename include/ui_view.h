@@ -1,6 +1,8 @@
 #ifndef UI_VIEW_H
 #define UI_VIEW_H
 
+#include <SDL3_ttf/SDL_ttf.h>
+
 #include "ui_state.h"
 #include "ui_components.h"
 
@@ -11,6 +13,8 @@ typedef struct {
     
     SDL_Window* secondary_window;
     SDL_Renderer* secondary_renderer;
+
+    TTF_Font* ui_font;
     
     ButtonComponent process_action_button;
     HistogramComponent image_histogram_panel;

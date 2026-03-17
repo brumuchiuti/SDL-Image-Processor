@@ -52,7 +52,8 @@ void calculate_histogram(SDL_Surface* surface, int histogram[256]) {
     for (int y = 0; y < surface->h; y++) {
         for (int x = 0; x < surface->w; x++) {
             int offset = (y * surface->pitch) + (x * 4);
-            // TODO: item 4
+            Uint8 gray = pixels[offset]; // R == G == B after grayscale conversion
+            histogram[gray]++;
         }
     }
 }

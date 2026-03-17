@@ -1,5 +1,6 @@
 #include "ui_state.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -30,8 +31,54 @@ bool init_ui_state(ApplicationState* state, const char* image_file_path) {
     }
     
     calculate_histogram(state->image_surface, state->histogram_frequencies);
+    analyse_histogram(state);
 
     return true;
+}
+
+void analyse_histogram(ApplicationState* state) {
+    long long total_pixels = 0;
+    long long weighted_sum = 0;
+
+    for (int i = 0; i < 256; i++) {
+        total_pixels += state->histogram_frequencies[i];
+        weighted_sum += (long long)i * state->histogram_frequencies[i];
+    }
+
+    if (total_pixels == 0) {
+        state->histogram_mean   = 0.0;
+        state->histogram_stddev = 0.0;
+        state->brightness_class = BRIGHTNESS_MEDIUM;
+        state->contrast_class   = CONTRAST_LOW;
+        return;
+    }
+
+    state->histogram_mean = (double)weighted_sum / (double)total_pixels;
+
+    double variance_sum = 0.0;
+    for (int i = 0; i < 256; i++) {
+        double diff = (double)i - state->histogram_mean;
+        variance_sum += diff * diff * state->histogram_frequencies[i];
+    }
+    state->histogram_stddev = sqrt(variance_sum / (double)total_pixels);
+
+    // brightness
+    if (state->histogram_mean < 85.0) {
+        state->brightness_class = BRIGHTNESS_DARK;
+    } else if (state->histogram_mean < 170.0) {
+        state->brightness_class = BRIGHTNESS_MEDIUM;
+    } else {
+        state->brightness_class = BRIGHTNESS_BRIGHT;
+    }
+
+    // contrast
+    if (state->histogram_stddev < 40.0) {
+        state->contrast_class = CONTRAST_LOW;
+    } else if (state->histogram_stddev < 80.0) {
+        state->contrast_class = CONTRAST_MEDIUM;
+    } else {
+        state->contrast_class = CONTRAST_HIGH;
+    }
 }
 
 void cleanup_ui_state(ApplicationState* state) {

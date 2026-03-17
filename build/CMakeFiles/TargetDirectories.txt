@@ -1,0 +1,14 @@
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/CMakeFiles/main.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/CMakeFiles/edit_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/CMakeFiles/rebuild_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL/CMakeFiles/SDL3-shared.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL/CMakeFiles/SDL3_test.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL/CMakeFiles/SDL_uclibc.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL/CMakeFiles/edit_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL/CMakeFiles/rebuild_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL_image/CMakeFiles/SDL3_image-shared.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL_image/CMakeFiles/edit_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL_image/CMakeFiles/rebuild_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL_ttf/CMakeFiles/SDL3_ttf-shared.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL_ttf/CMakeFiles/edit_cache.dir
+/Users/brumuchiuti/Downloads/SDL-Image-Processor/build/vendored/SDL_ttf/CMakeFiles/rebuild_cache.dir
