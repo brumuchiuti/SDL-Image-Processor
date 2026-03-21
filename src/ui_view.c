@@ -4,23 +4,72 @@
 #include <stdio.h>
 #include <string.h>
 
+typedef struct
+{
+    SDL_Color clear_color;
+} PrimaryImageProps;
+
+typedef struct
+{
+    SDL_Color background_color;
+} SecondaryWindowProps;
+
+typedef struct
+{
+    SDL_FRect panel_rect;
+    SDL_Color panel_color;
+    SDL_Color bar_color;
+    SDL_Color label_color;
+    const char *left_label;
+    const char *right_label;
+    const char *center_label;
+    float right_label_offset_x;
+    float center_label_offset_x;
+} HistogramProps;
+
+typedef struct
+{
+    float text_x;
+    float text_y;
+    float line_height;
+    SDL_Color title_color;
+    SDL_Color value_color;
+    SDL_Color hint_color;
+    const char *title;
+    const char *brightness_hint;
+    const char *contrast_hint;
+} AnalysisSectionProps;
+
+typedef struct
+{
+    SDL_FRect rect;
+    SDL_Color normal_color;
+    SDL_Color hover_color;
+    bool is_hovered;
+    SDL_Color text_color;
+    const char *text;
+    float text_offset_x;
+    float text_offset_y;
+} ActionButtonProps;
+
+
 bool init_ui_view(ApplicationView *view, ApplicationState *state)
 {
     memset(view, 0, sizeof(ApplicationView));
 
-    int image_width  = state->image_surface->w;
+    int image_width = state->image_surface->w;
     int image_height = state->image_surface->h;
 
     // Primary Window
-    view->primary_window   = SDL_CreateWindow("Imagem Principal", image_width, image_height, 0);
+    view->primary_window = SDL_CreateWindow("Imagem Principal", image_width, image_height, 0);
     view->primary_renderer = SDL_CreateRenderer(view->primary_window, NULL);
     view->primary_image_texture = SDL_CreateTextureFromSurface(view->primary_renderer, state->image_surface);
     SDL_SetWindowPosition(view->primary_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
     // Secondary Window
-    int secondary_window_width  = 400;
+    int secondary_window_width = 400;
     int secondary_window_height = 500;
-    view->secondary_window   = SDL_CreateWindow("Painel de Controle", secondary_window_width, secondary_window_height, 0);
+    view->secondary_window = SDL_CreateWindow("Painel de Controle", secondary_window_width, secondary_window_height, 0);
     view->secondary_renderer = SDL_CreateRenderer(view->secondary_window, NULL);
 
     int primary_x, primary_y;
@@ -28,203 +77,304 @@ bool init_ui_view(ApplicationView *view, ApplicationState *state)
     SDL_SetWindowPosition(view->secondary_window, primary_x + image_width, primary_y);
 
     // SDL_ttf
-    if (!TTF_Init()) {
+    if (!TTF_Init())
+    {
         fprintf(stderr, "SDL_ttf init failed: %s\n", SDL_GetError());
     }
 
     const char *font_candidates[] = {
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
         "/usr/share/fonts/TTF/DejaVuSans.ttf",
-        "/usr/share/fonts/TTF/MesloLGS-NF-Regular.ttf"
+        "/usr/share/fonts/TTF/MesloLGS-NF-Regular.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
         "C:/Windows/Fonts/arial.ttf",
-        NULL
-    };
+        NULL};
+
     view->ui_font = NULL;
-    for (int i = 0; font_candidates[i] != NULL; i++) {
+    for (int i = 0; font_candidates[i] != NULL; i++)
+    {
         view->ui_font = TTF_OpenFont(font_candidates[i], 14);
-        if (view->ui_font) break;
+        if (view->ui_font)
+            break;
     }
-    if (!view->ui_font) {
+    if (!view->ui_font)
+    {
         fprintf(stderr, "Warning: no font found for SDL_ttf; text labels will be skipped.\n");
     }
-
-    // Components
-    view->process_action_button.boundary_rectangle = (SDL_FRect){100.0f, 420.0f, 200.0f, 50.0f};
-    view->process_action_button.normal_color       = (SDL_Color){0, 120, 215, 255};
-    view->process_action_button.hover_color        = (SDL_Color){0, 150, 255, 255};
-    view->process_action_button.is_currently_hovered = false;
-
-    view->image_histogram_panel.boundary_rectangle = (SDL_FRect){20.0f, 20.0f, 360.0f, 280.0f};
-    view->image_histogram_panel.background_color   = (SDL_Color){30, 30, 30, 255};
-    view->image_histogram_panel.bar_color          = (SDL_Color){100, 200, 100, 255};
 
     return true;
 }
 
 static bool render_text(ApplicationView *view, const char *text, float x, float y, SDL_Color color)
 {
-    if (!view->ui_font || !text) return false;
+    if (!view->ui_font || !text)
+        return false;
 
     SDL_Surface *text_surface = TTF_RenderText_Blended(view->ui_font, text, 0, color);
-    if (!text_surface) return false;
+    if (!text_surface)
+        return false;
 
     SDL_Texture *text_texture = SDL_CreateTextureFromSurface(view->secondary_renderer, text_surface);
     SDL_DestroySurface(text_surface);
-    if (!text_texture) return false;
+    if (!text_texture)
+        return false;
 
     float tex_w, tex_h;
     SDL_GetTextureSize(text_texture, &tex_w, &tex_h);
 
-    SDL_FRect dst = { x, y, tex_w, tex_h };
+    SDL_FRect dst = {x, y, tex_w, tex_h};
     SDL_RenderTexture(view->secondary_renderer, text_texture, NULL, &dst);
     SDL_DestroyTexture(text_texture);
     return true;
 }
 
-void render_ui_view(ApplicationView *view, ApplicationState *state)
+static PrimaryImageProps create_primary_image_component(void)
 {
-    // Primary Window
-    SDL_SetRenderDrawColor(view->primary_renderer, 0, 0, 0, 255);
+    PrimaryImageProps props = {
+        .clear_color = {0, 0, 0, 255}};
+    return props;
+}
+
+static void render_primary_image_component(ApplicationView *view, const PrimaryImageProps *props)
+{
+    SDL_SetRenderDrawColor(view->primary_renderer,
+                           props->clear_color.r,
+                           props->clear_color.g,
+                           props->clear_color.b,
+                           props->clear_color.a);
     SDL_RenderClear(view->primary_renderer);
     SDL_RenderTexture(view->primary_renderer, view->primary_image_texture, NULL, NULL);
     SDL_RenderPresent(view->primary_renderer);
+}
 
-    // Secondary Window
-    SDL_SetRenderDrawColor(view->secondary_renderer, 45, 45, 48, 255);
-    SDL_RenderClear(view->secondary_renderer);
+static SecondaryWindowProps create_secondary_window_component(void)
+{
+    SecondaryWindowProps props = {
+        .background_color = {45, 45, 48, 255}};
+    return props;
+}
 
-    // histogram background
+static void render_secondary_window_component(ApplicationView *view, const SecondaryWindowProps *props)
+{
     SDL_SetRenderDrawColor(view->secondary_renderer,
-                           view->image_histogram_panel.background_color.r,
-                           view->image_histogram_panel.background_color.g,
-                           view->image_histogram_panel.background_color.b,
-                           255);
-    SDL_RenderFillRect(view->secondary_renderer, &view->image_histogram_panel.boundary_rectangle);
+                           props->background_color.r,
+                           props->background_color.g,
+                           props->background_color.b,
+                           props->background_color.a);
+    SDL_RenderClear(view->secondary_renderer);
+}
 
-    // logarithmic scale
+static HistogramProps create_histogram_component(const ApplicationView *view)
+{
+    HistogramProps props = {
+        .panel_rect = (SDL_FRect){20.0f, 20.0f, 360.0f, 280.0f},
+        .panel_color = (SDL_Color){30, 30, 30, 255},
+        .bar_color = (SDL_Color){100, 200, 100, 255},
+        .label_color = {180, 180, 180, 255},
+        .left_label = "0",
+        .right_label = "255",
+        .center_label = "Intensidade",
+        .right_label_offset_x = 22.0f,
+        .center_label_offset_x = 145.0f};
+    return props;
+}
+
+static void render_histogram_component(ApplicationView *view, ApplicationState *state, const HistogramProps *props)
+{
+    SDL_SetRenderDrawColor(view->secondary_renderer,
+                           props->panel_color.r,
+                           props->panel_color.g,
+                           props->panel_color.b,
+                           props->panel_color.a);
+    SDL_RenderFillRect(view->secondary_renderer, &props->panel_rect);
+
     int maximum_frequency = 0;
-    for (int i = 0; i < 256; i++) {
+    for (int i = 0; i < 256; i++)
+    {
         if (state->histogram_frequencies[i] > maximum_frequency)
             maximum_frequency = state->histogram_frequencies[i];
     }
 
-    if (maximum_frequency > 0) {
-        float bar_w   = view->image_histogram_panel.boundary_rectangle.w / 256.0f;
-        float panel_h = view->image_histogram_panel.boundary_rectangle.h;
+    if (maximum_frequency > 0)
+    {
+        float bar_w = props->panel_rect.w / 256.0f;
+        float panel_h = props->panel_rect.h;
         float log_max = logf((float)maximum_frequency + 1.0f);
 
         SDL_SetRenderDrawColor(view->secondary_renderer,
-                               view->image_histogram_panel.bar_color.r,
-                               view->image_histogram_panel.bar_color.g,
-                               view->image_histogram_panel.bar_color.b,
-                               255);
-        for (int i = 0; i < 256; i++) {
-            float bar_h = (logf((float)state->histogram_frequencies[i] + 1.0f) / log_max)
-                          * panel_h;
+                               props->bar_color.r,
+                               props->bar_color.g,
+                               props->bar_color.b,
+                               props->bar_color.a);
+        for (int i = 0; i < 256; i++)
+        {
+            float bar_h = (logf((float)state->histogram_frequencies[i] + 1.0f) / log_max) * panel_h;
             SDL_FRect bar = {
-                view->image_histogram_panel.boundary_rectangle.x + (i * bar_w),
-                view->image_histogram_panel.boundary_rectangle.y + panel_h - bar_h,
+                props->panel_rect.x + (i * bar_w),
+                props->panel_rect.y + panel_h - bar_h,
                 bar_w,
-                bar_h
-            };
+                bar_h};
             SDL_RenderFillRect(view->secondary_renderer, &bar);
         }
     }
 
-    // labels
-    if (view->ui_font) {
-        SDL_Color label_color = {180, 180, 180, 255};
-        float panel_bottom = view->image_histogram_panel.boundary_rectangle.y
-                           + view->image_histogram_panel.boundary_rectangle.h + 4.0f;
-        render_text(view, "0",
-                    view->image_histogram_panel.boundary_rectangle.x,
-                    panel_bottom, label_color);
-        render_text(view, "255",
-                    view->image_histogram_panel.boundary_rectangle.x
-                        + view->image_histogram_panel.boundary_rectangle.w - 22.0f,
-                    panel_bottom, label_color);
-        render_text(view, "Intensidade",
-                    view->image_histogram_panel.boundary_rectangle.x + 145.0f,
-                    panel_bottom, label_color);
+    if (view->ui_font)
+    {
+        float panel_bottom = props->panel_rect.y + props->panel_rect.h + 4.0f;
+        render_text(view, props->left_label, props->panel_rect.x, panel_bottom, props->label_color);
+        render_text(view,
+                    props->right_label,
+                    props->panel_rect.x + props->panel_rect.w - props->right_label_offset_x,
+                    panel_bottom,
+                    props->label_color);
+        render_text(view,
+                    props->center_label,
+                    props->panel_rect.x + props->center_label_offset_x,
+                    panel_bottom,
+                    props->label_color);
+    }
+}
+
+static AnalysisSectionProps create_analysis_section_component(void)
+{
+    AnalysisSectionProps props = {
+        .text_x = 20.0f,
+        .text_y = 320.0f,
+        .line_height = 20.0f,
+        .title_color = {220, 220, 220, 255},
+        .value_color = {100, 220, 100, 255},
+        .hint_color = {140, 140, 140, 255},
+        .title = "Analise do Histograma:",
+        .brightness_hint = "Media: <85 escura | 85-170 media | >170 clara",
+        .contrast_hint = "Desvio: <40 baixo | 40-80 medio | >80 alto"};
+    return props;
+}
+
+static void render_analysis_section_component(ApplicationView *view, ApplicationState *state, const AnalysisSectionProps *props)
+{
+    if (!view->ui_font)
+        return;
+
+    char line[160];
+    float ty = props->text_y;
+
+    render_text(view, props->title, props->text_x, ty, props->title_color);
+    ty += props->line_height + 4.0f;
+
+    const char *brightness_label;
+    switch (state->brightness_class)
+    {
+    case BRIGHTNESS_DARK:
+        brightness_label = "escura";
+        break;
+    case BRIGHTNESS_BRIGHT:
+        brightness_label = "clara";
+        break;
+    default:
+        brightness_label = "media";
+        break;
     }
 
-    // analisys section
-    if (view->ui_font) {
-        char line[160];
-        SDL_Color title_color = {220, 220, 220, 255};
-        SDL_Color value_color = {100, 220, 100, 255};
-        SDL_Color hint_color  = {140, 140, 140, 255};
+    snprintf(line, sizeof(line), "Media de intensidade: %.1f  =>  Imagem %s",
+             state->histogram_mean, brightness_label);
+    render_text(view, line, props->text_x, ty, props->value_color);
+    ty += props->line_height;
 
-        float tx     = 20.0f;
-        float ty     = 320.0f;
-        float line_h = 20.0f;
-
-        render_text(view, "Analise do Histograma:", tx, ty, title_color);
-        ty += line_h + 4.0f;
-
-        const char *brightness_label;
-        switch (state->brightness_class) {
-            case BRIGHTNESS_DARK:   brightness_label = "escura"; break;
-            case BRIGHTNESS_BRIGHT: brightness_label = "clara";  break;
-            default:                brightness_label = "media";  break;
-        }
-        snprintf(line, sizeof(line), "Media de intensidade: %.1f  =>  Imagem %s",
-                 state->histogram_mean, brightness_label);
-        render_text(view, line, tx, ty, value_color);
-        ty += line_h;
-
-        const char *contrast_label;
-        switch (state->contrast_class) {
-            case CONTRAST_LOW:  contrast_label = "baixo"; break;
-            case CONTRAST_HIGH: contrast_label = "alto";  break;
-            default:            contrast_label = "medio"; break;
-        }
-        snprintf(line, sizeof(line), "Desvio padrao: %.1f  =>  Contraste %s",
-                 state->histogram_stddev, contrast_label);
-        render_text(view, line, tx, ty, value_color);
-        ty += line_h + 2.0f;
-
-        // legend
-        render_text(view, "Media: <85 escura | 85-170 media | >170 clara",
-                    tx, ty, hint_color);
-        ty += line_h;
-        render_text(view, "Desvio: <40 baixo | 40-80 medio | >80 alto",
-                    tx, ty, hint_color);
+    const char *contrast_label;
+    switch (state->contrast_class)
+    {
+    case CONTRAST_LOW:
+        contrast_label = "baixo";
+        break;
+    case CONTRAST_HIGH:
+        contrast_label = "alto";
+        break;
+    default:
+        contrast_label = "medio";
+        break;
     }
 
-    // button
-    SDL_Color btn_color = view->process_action_button.is_currently_hovered
-                        ? view->process_action_button.hover_color
-                        : view->process_action_button.normal_color;
+    snprintf(line, sizeof(line), "Desvio padrao: %.1f  =>  Contraste %s",
+             state->histogram_stddev, contrast_label);
+    render_text(view, line, props->text_x, ty, props->value_color);
+    ty += props->line_height + 2.0f;
+
+    render_text(view, props->brightness_hint, props->text_x, ty, props->hint_color);
+    ty += props->line_height;
+    render_text(view, props->contrast_hint, props->text_x, ty, props->hint_color);
+}
+
+static ActionButtonProps create_action_button_component(const ApplicationView *view)
+{
+    ActionButtonProps props = {
+        .rect = (SDL_FRect){100.0f, 420.0f, 200.0f, 50.0f},
+        .normal_color = (SDL_Color){0, 120, 215, 255},
+        .hover_color = (SDL_Color){0, 150, 255, 255},
+        .is_hovered = false,
+        .text_color = {255, 255, 255, 255},
+        .text = "Equalizar",
+        .text_offset_x = 68.0f,
+        .text_offset_y = 16.0f};
+    return props;
+}
+
+static void render_action_button_component(ApplicationView *view, const ActionButtonProps *props)
+{
+    SDL_Color button_color = props->is_hovered ? props->hover_color : props->normal_color;
     SDL_SetRenderDrawColor(view->secondary_renderer,
-                           btn_color.r, btn_color.g, btn_color.b, btn_color.a);
-    SDL_RenderFillRect(view->secondary_renderer, &view->process_action_button.boundary_rectangle);
+                           button_color.r,
+                           button_color.g,
+                           button_color.b,
+                           button_color.a);
+    SDL_RenderFillRect(view->secondary_renderer, &props->rect);
 
-    if (view->ui_font) {
-        SDL_Color btn_text = {255, 255, 255, 255};
-        render_text(view, "Equalizar Histograma",
-                    view->process_action_button.boundary_rectangle.x + 36.0f,
-                    view->process_action_button.boundary_rectangle.y + 16.0f,
-                    btn_text);
+    if (view->ui_font)
+    {
+        render_text(view,
+                    props->text,
+                    props->rect.x + props->text_offset_x,
+                    props->rect.y + props->text_offset_y,
+                    props->text_color);
     }
+}
+
+void render_ui_view(ApplicationView *view, ApplicationState *state)
+{
+    PrimaryImageProps primary_props = create_primary_image_component();
+    render_primary_image_component(view, &primary_props);
+
+    SecondaryWindowProps secondary_props = create_secondary_window_component();
+    render_secondary_window_component(view, &secondary_props);
+
+    HistogramProps histogram_props = create_histogram_component(view);
+    render_histogram_component(view, state, &histogram_props);
+
+    AnalysisSectionProps analysis_props = create_analysis_section_component();
+    render_analysis_section_component(view, state, &analysis_props);
+
+    ActionButtonProps button_props = create_action_button_component(view);
+    render_action_button_component(view, &button_props);
 
     SDL_RenderPresent(view->secondary_renderer);
 }
 
-// cleanup_ui_view
-
 void cleanup_ui_view(ApplicationView *view)
 {
-    if (view->ui_font) {
+    if (view->ui_font)
+    {
         TTF_CloseFont(view->ui_font);
         view->ui_font = NULL;
     }
     TTF_Quit();
 
-    if (view->primary_image_texture) SDL_DestroyTexture(view->primary_image_texture);
-    if (view->primary_renderer)      SDL_DestroyRenderer(view->primary_renderer);
-    if (view->primary_window)        SDL_DestroyWindow(view->primary_window);
-    if (view->secondary_renderer)    SDL_DestroyRenderer(view->secondary_renderer);
-    if (view->secondary_window)      SDL_DestroyWindow(view->secondary_window);
+    if (view->primary_image_texture)
+        SDL_DestroyTexture(view->primary_image_texture);
+    if (view->primary_renderer)
+        SDL_DestroyRenderer(view->primary_renderer);
+    if (view->primary_window)
+        SDL_DestroyWindow(view->primary_window);
+    if (view->secondary_renderer)
+        SDL_DestroyRenderer(view->secondary_renderer);
+    if (view->secondary_window)
+        SDL_DestroyWindow(view->secondary_window);
 }
