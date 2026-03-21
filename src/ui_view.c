@@ -4,30 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// render_text
-static bool render_text(ApplicationView *view, const char *text,
-                         float x, float y, SDL_Color color)
-{
-    if (!view->ui_font || !text) return false;
-
-    SDL_Surface *text_surface = TTF_RenderText_Blended(view->ui_font, text, 0, color);
-    if (!text_surface) return false;
-
-    SDL_Texture *text_texture = SDL_CreateTextureFromSurface(view->secondary_renderer, text_surface);
-    SDL_DestroySurface(text_surface);
-    if (!text_texture) return false;
-
-    float tex_w, tex_h;
-    SDL_GetTextureSize(text_texture, &tex_w, &tex_h);
-
-    SDL_FRect dst = { x, y, tex_w, tex_h };
-    SDL_RenderTexture(view->secondary_renderer, text_texture, NULL, &dst);
-    SDL_DestroyTexture(text_texture);
-    return true;
-}
-
-// init_ui_view
- 
 bool init_ui_view(ApplicationView *view, ApplicationState *state)
 {
     memset(view, 0, sizeof(ApplicationView));
@@ -59,6 +35,7 @@ bool init_ui_view(ApplicationView *view, ApplicationState *state)
     const char *font_candidates[] = {
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
         "/usr/share/fonts/TTF/DejaVuSans.ttf",
+        "/usr/share/fonts/TTF/MesloLGS-NF-Regular.ttf"
         "/System/Library/Fonts/Helvetica.ttc",
         "C:/Windows/Fonts/arial.ttf",
         NULL
@@ -85,7 +62,26 @@ bool init_ui_view(ApplicationView *view, ApplicationState *state)
     return true;
 }
 
-// render_ui_view
+static bool render_text(ApplicationView *view, const char *text, float x, float y, SDL_Color color)
+{
+    if (!view->ui_font || !text) return false;
+
+    SDL_Surface *text_surface = TTF_RenderText_Blended(view->ui_font, text, 0, color);
+    if (!text_surface) return false;
+
+    SDL_Texture *text_texture = SDL_CreateTextureFromSurface(view->secondary_renderer, text_surface);
+    SDL_DestroySurface(text_surface);
+    if (!text_texture) return false;
+
+    float tex_w, tex_h;
+    SDL_GetTextureSize(text_texture, &tex_w, &tex_h);
+
+    SDL_FRect dst = { x, y, tex_w, tex_h };
+    SDL_RenderTexture(view->secondary_renderer, text_texture, NULL, &dst);
+    SDL_DestroyTexture(text_texture);
+    return true;
+}
+
 void render_ui_view(ApplicationView *view, ApplicationState *state)
 {
     // Primary Window
