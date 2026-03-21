@@ -19,8 +19,10 @@ typedef enum {
 typedef struct {
     bool is_application_running;
     bool is_image_processing_completed;
+    bool is_histogram_equalized;
     
     SDL_Surface* image_surface;
+    SDL_Surface* original_grayscale_surface;
     int histogram_frequencies[256];
 
     /* Histogram analysis results */

@@ -45,13 +45,14 @@ typedef struct
     SDL_FRect rect;
     SDL_Color normal_color;
     SDL_Color hover_color;
+    SDL_Color clicked_color;
+    bool is_clicked;
     bool is_hovered;
     SDL_Color text_color;
     const char *text;
     float text_offset_x;
     float text_offset_y;
 } ActionButtonProps;
-
 
 bool init_ui_view(ApplicationView *view, ApplicationState *state)
 {
@@ -102,6 +103,33 @@ bool init_ui_view(ApplicationView *view, ApplicationState *state)
         fprintf(stderr, "Warning: no font found for SDL_ttf; text labels will be skipped.\n");
     }
 
+    view->process_action_button.boundary_rectangle = (SDL_FRect){100.0f, 420.0f, 200.0f, 50.0f};
+    view->process_action_button.normal_color = (SDL_Color){0, 120, 215, 255};
+    view->process_action_button.hover_color = (SDL_Color){0, 150, 255, 255};
+    view->process_action_button.is_currently_hovered = false;
+    view->process_action_button.is_currently_clicked = false;
+
+    view->image_histogram_panel.boundary_rectangle = (SDL_FRect){20.0f, 20.0f, 360.0f, 280.0f};
+    view->image_histogram_panel.background_color = (SDL_Color){30, 30, 30, 255};
+    view->image_histogram_panel.bar_color = (SDL_Color){100, 200, 100, 255};
+
+    return true;
+}
+
+bool update_primary_image_texture(ApplicationView *view, ApplicationState *state)
+{
+    SDL_Texture *new_texture = SDL_CreateTextureFromSurface(view->primary_renderer, state->image_surface);
+    if (!new_texture)
+    {
+        fprintf(stderr, "Failed to recreate primary texture: %s\n", SDL_GetError());
+        return false;
+    }
+
+    if (view->primary_image_texture)
+    {
+        SDL_DestroyTexture(view->primary_image_texture);
+    }
+    view->primary_image_texture = new_texture;
     return true;
 }
 
@@ -167,9 +195,9 @@ static void render_secondary_window_component(ApplicationView *view, const Secon
 static HistogramProps create_histogram_component(const ApplicationView *view)
 {
     HistogramProps props = {
-        .panel_rect = (SDL_FRect){20.0f, 20.0f, 360.0f, 280.0f},
-        .panel_color = (SDL_Color){30, 30, 30, 255},
-        .bar_color = (SDL_Color){100, 200, 100, 255},
+        .panel_rect = view->image_histogram_panel.boundary_rectangle,
+        .panel_color = view->image_histogram_panel.background_color,
+        .bar_color = view->image_histogram_panel.bar_color,
         .label_color = {180, 180, 180, 255},
         .left_label = "0",
         .right_label = "255",
@@ -304,23 +332,34 @@ static void render_analysis_section_component(ApplicationView *view, Application
     render_text(view, props->contrast_hint, props->text_x, ty, props->hint_color);
 }
 
-static ActionButtonProps create_action_button_component(const ApplicationView *view)
+static ActionButtonProps create_action_button_component(const ApplicationView *view, const ApplicationState *state)
 {
     ActionButtonProps props = {
-        .rect = (SDL_FRect){100.0f, 420.0f, 200.0f, 50.0f},
-        .normal_color = (SDL_Color){0, 120, 215, 255},
-        .hover_color = (SDL_Color){0, 150, 255, 255},
-        .is_hovered = false,
+        .rect = view->process_action_button.boundary_rectangle,
+        .normal_color = view->process_action_button.normal_color,
+        .hover_color = view->process_action_button.hover_color,
+        .clicked_color = (SDL_Color){0, 90, 170, 255},
+        .is_clicked = view->process_action_button.is_currently_clicked,
+        .is_hovered = view->process_action_button.is_currently_hovered,
         .text_color = {255, 255, 255, 255},
-        .text = "Equalizar",
-        .text_offset_x = 68.0f,
+        .text = state->is_histogram_equalized ? "Ver original" : "Equalizar",
+        .text_offset_x = state->is_histogram_equalized ? 52.0f : 68.0f,
         .text_offset_y = 16.0f};
     return props;
 }
 
 static void render_action_button_component(ApplicationView *view, const ActionButtonProps *props)
 {
-    SDL_Color button_color = props->is_hovered ? props->hover_color : props->normal_color;
+    SDL_Color button_color = props->normal_color;
+    if (props->is_clicked)
+    {
+        button_color = props->clicked_color;
+    }
+    else if (props->is_hovered)
+    {
+        button_color = props->hover_color;
+    }
+
     SDL_SetRenderDrawColor(view->secondary_renderer,
                            button_color.r,
                            button_color.g,
@@ -352,7 +391,7 @@ void render_ui_view(ApplicationView *view, ApplicationState *state)
     AnalysisSectionProps analysis_props = create_analysis_section_component();
     render_analysis_section_component(view, state, &analysis_props);
 
-    ActionButtonProps button_props = create_action_button_component(view);
+    ActionButtonProps button_props = create_action_button_component(view, state);
     render_action_button_component(view, &button_props);
 
     SDL_RenderPresent(view->secondary_renderer);

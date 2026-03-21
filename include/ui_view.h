@@ -22,6 +22,8 @@ typedef struct {
 
 bool init_ui_view(ApplicationView* view, ApplicationState* state);
 
+bool update_primary_image_texture(ApplicationView* view, ApplicationState* state);
+
 void render_ui_view(ApplicationView* view, ApplicationState* state);
 
 void cleanup_ui_view(ApplicationView* view);
