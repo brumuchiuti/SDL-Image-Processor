@@ -74,6 +74,8 @@ void equalize_histogram(SDL_Surface *surface)
         return;
 
     int histogram[256];
+
+    // we need the current histogram to compute the equalization mapping function (LUT)
     calculate_histogram(surface, histogram);
 
     int total_pixels = surface->w * surface->h;

@@ -2,7 +2,29 @@
 
 #include <stdio.h>
 
+#include <SDL3_image/SDL_image.h>
+
 #include "image_processor.h"
+
+#define OUTPUT_IMAGE_PATH "output_image.png"
+
+static bool save_current_image_to_png(const ApplicationState *state)
+{
+    if (!state || !state->image_surface)
+    {
+        fprintf(stderr, "[SAVE] No image surface available to save.\n");
+        return false;
+    }
+
+    if (!IMG_SavePNG(state->image_surface, OUTPUT_IMAGE_PATH))
+    {
+        fprintf(stderr, "[SAVE] Failed to save %s: %s\n", OUTPUT_IMAGE_PATH, SDL_GetError());
+        return false;
+    }
+
+    printf("[SAVE] Image saved to %s\n", OUTPUT_IMAGE_PATH);
+    return true;
+}
 
 static void refresh_processed_view(ApplicationState *state, ApplicationView *view)
 {
@@ -50,6 +72,15 @@ void process_user_interactions(ApplicationState *state, ApplicationView *view)
         if (user_event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED)
         {
             state->is_application_running = false;
+            continue;
+        }
+
+        if (user_event.type == SDL_EVENT_KEY_DOWN)
+        {
+            if (!user_event.key.repeat && user_event.key.scancode == SDL_SCANCODE_S)
+            {
+                save_current_image_to_png(state);
+            }
             continue;
         }
 
