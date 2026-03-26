@@ -2,4 +2,4 @@
 build/
 src/*.o
 main.exe
-*.dll
+/*.dll
