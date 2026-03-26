@@ -97,5 +97,13 @@ $ ./debug.sh ../../images/405.jpg
 ```
 
 ## Resultados
+![Descrição](docs/araras1.jpg)
+![Descrição](docs/araras2.jpg)
+![Descrição](docs/401-1.jpg)
+![Descrição](docs/405-2.jpg)
+![Descrição](docs/black1.jpg)
+![Descrição](docs/black2.jpg)
+![Descrição](docs/white1.jpg)
+![Descrição](docs/white2.jpg)
 
 ## Referências
