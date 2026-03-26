@@ -97,13 +97,59 @@ $ ./debug.sh ../../images/405.jpg
 ```
 
 ## Resultados
-![Descrição](docs/araras1.jpg)
-![Descrição](docs/araras2.jpg)
-![Descrição](docs/401-1.jpg)
-![Descrição](docs/405-2.jpg)
+
+### Imagens uniformes
+
+#### Histograma
+O histograma apresenta todos os pixels concentrados em um único nível de intensidade (0 ou 255). Isso indica ausência total de variação na imagem.
+- Imagem branca → intensidades em 255 → imagem clara
+- Imagem preta → intensidades em 0 → imagem escura
+- Desvio padrão igual a zero → contraste inexistente
+  
+#### Equalização
+A equalização não produz alterações visíveis. Como não há distribuição de intensidades, não existe informação para redistribuir.
+
 ![Descrição](docs/black1.jpg)
 ![Descrição](docs/black2.jpg)
 ![Descrição](docs/white1.jpg)
 ![Descrição](docs/white2.jpg)
+
+---
+
+### Imagem com boa distribuição
+
+#### Histograma
+Os níveis de intensidade estão distribuídos ao longo de toda a faixa (0–255).
+- Média intermediária → imagem equilibrada (nem clara nem escura)
+- Desvio padrão médio → contraste adequado
+  
+#### Equalização
+A equalização redistribui levemente os níveis de intensidade, tornando a distribuição mais uniforme.
+
+**Efeito:** 
+- Pequeno aumento no contraste e melhor distinção entre tons.
+
+![Descrição](docs/araras1.jpg)
+![Descrição](docs/araras2.jpg)
+
+---
+
+### Imagem escura
+
+#### Histograma
+As intensidades estão concentradas em valores baixos.
+- Média baixa → imagem escura
+- Desvio padrão moderado → contraste limitado
+
+#### Equalização
+A equalização redistribui os níveis de intensidade ao longo de toda a faixa.
+
+**Efeito:**
+- A imagem se torna mais clara
+- O contraste aumenta
+- Detalhes antes pouco visíveis passam a ser perceptíveis
+
+![Descrição](docs/401-1.jpg)
+![Descrição](docs/405-2.jpg)
 
 ## Referências
