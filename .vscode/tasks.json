@@ -1,0 +1,21 @@
+{
+    "tasks": [
+        {
+            "label": "Compilar e rodar (MinGW: mingw32-make -> main.exe)",
+            "type": "shell",
+            "command": "mingw32-make; if ($?) { .\\main.exe images\\405.jpg}",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ],
+    "version": "2.0.0"
+}
