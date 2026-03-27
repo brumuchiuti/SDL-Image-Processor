@@ -12,7 +12,7 @@ SDL_IMAGE_DLL_FILE = SDL3_image.dll
 SDL_TTF_DLL_FILE = SDL3_ttf.dll
 
 CC = gcc
-CFLAGS = -std=c23 -Wall -Wextra -Wpedantic -Wno-unused-result
+CFLAGS = -Wall -Wextra -Wpedantic -Wno-unused-result
 LDFLAGS = -L$(SDL_LIB_DIR)
 LDLIBS = -lSDL3 -lSDL3_image -lSDL3_ttf
 INC_DIRS = -I$(SDL_INC_DIR) -Iinclude
