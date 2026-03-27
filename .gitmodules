@@ -1,0 +1,9 @@
+[submodule "subrepos/SDL"]
+	path = subrepos/SDL
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "subrepos/SDL_image"]
+	path = subrepos/SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git
+[submodule "subrepos/SDL_ttf"]
+	path = subrepos/SDL_ttf
+	url = https://github.com/libsdl-org/SDL_ttf.git
