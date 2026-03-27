@@ -154,7 +154,7 @@ main(argc, argv)
  ├─ init_ui_state()
  │    ├─ IMG_Load() + SDL_ConvertSurface(RGBA32)
  │    ├─ is_grayscale()? → convert_to_grayscale()
- │    ├─ SDL_DuplicateSurface()  ← cópia original preservada
+ │    ├─ SDL_DuplicateSurface()  ← cópia original preservada (permite reverter)
  │    └─ calculate_histogram() + analyse_histogram()
  │
  ├─ init_ui_view()
@@ -184,9 +184,8 @@ das funcionalidades de exibição dos resultados, além de documentar junto de J
 Organizou a estrutura do projeto e implementou as funcionalidades para exibição das telas, além de documentar a estruturação
 do projeto.
 
-#### Jéssica
-Documentou todo o funcionamento do projeto junto de Bruna, desde os objetivos iniciais até os resultados alcançados, complementando a documentação
-feita pelo Gabriel.
+#### Jessica
+Documentou todo o funcionamento do projeto junto de Bruna, desde os objetivos iniciais até os resultados alcançados, complementando a documentação feita pelo Gabriel.
 
 #### Lucas
 Refatorou a inclusão das dependências para tornar o projeto mais leve e mais rápido para ser baixado,
