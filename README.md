@@ -178,14 +178,14 @@ main(argc, argv)
 ## Contribuições
 #### Bruna
 Implementou a biblioteca TTF para escrever as mensagens que melhoraram a compreensão do projeto, com uma reestruturação
-das funcionalidades de exibição dos resultados, além de documentar junto de Jéssica, o funcionamento do programa.
+das funcionalidades de exibição dos resultados, além de documentar junto de Jessica o funcionamento do programa.
 
 #### Gabriel
 Organizou a estrutura do projeto e implementou as funcionalidades para exibição das telas, além de documentar a estruturação
 do projeto.
 
 #### Jessica
-Documentou todo o funcionamento do projeto junto de Bruna, desde os objetivos iniciais até os resultados alcançados, complementando a documentação feita pelo Gabriel.
+Documentou todo o funcionamento do projeto junto de Bruna, desde os objetivos iniciais até os resultados alcançados, complementando a documentação feita pelo Gabriel, participou nos testes durante todo o desenvolvimento do projeto
 
 #### Lucas
 Refatorou a inclusão das dependências para tornar o projeto mais leve e mais rápido para ser baixado,
