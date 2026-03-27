@@ -61,13 +61,13 @@ bool init_ui_view(ApplicationView *view, ApplicationState *state)
     int image_width = state->image_surface->w;
     int image_height = state->image_surface->h;
 
-    // Primary Window
+    // Primary Window - displays the main image being processed
     view->primary_window = SDL_CreateWindow("Imagem Principal", image_width, image_height, 0);
     view->primary_renderer = SDL_CreateRenderer(view->primary_window, NULL);
     view->primary_image_texture = SDL_CreateTextureFromSurface(view->primary_renderer, state->image_surface);
     SDL_SetWindowPosition(view->primary_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
-    // Secondary Window
+    // Secondary Window - displays histogram and control panel
     int secondary_window_width = 400;
     int secondary_window_height = 500;
     view->secondary_window = SDL_CreateWindow("Painel de Controle", secondary_window_width, secondary_window_height, 0);
@@ -77,7 +77,7 @@ bool init_ui_view(ApplicationView *view, ApplicationState *state)
     SDL_GetWindowPosition(view->primary_window, &primary_x, &primary_y);
     SDL_SetWindowPosition(view->secondary_window, primary_x + image_width, primary_y);
 
-    // SDL_ttf
+    // Initialize SDL_ttf for text rendering
     if (!TTF_Init())
     {
         fprintf(stderr, "SDL_ttf init failed: %s\n", SDL_GetError());
