@@ -1,6 +1,16 @@
 #include "image_processor.h"
 #include <string.h>
 
+/**
+ * is_grayscale - Checks if an SDL_Surface is already in grayscale format.
+ * @surface: The SDL_Surface to analyze
+ *
+ * Returns: true if all pixels have equal R, G, B channels; false otherwise
+ *
+ * This function iterates through all pixels and verifies that the red,
+ * green, and blue channels have identical values, which indicates the
+ * image is in grayscale format.
+ */
 bool is_grayscale(SDL_Surface *surface)
 {
     Uint8 *pixels = (Uint8 *)surface->pixels;
@@ -52,11 +62,13 @@ void convert_to_grayscale(SDL_Surface *surface)
 
 void calculate_histogram(SDL_Surface *surface, int histogram[256])
 {
+    // Initialize histogram array to zero
     memset(histogram, 0, sizeof(int) * 256);
     if (!surface)
         return;
 
     Uint8 *pixels = (Uint8 *)surface->pixels;
+    // Count frequency of each intensity level (0-255)
     for (int y = 0; y < surface->h; y++)
     {
         for (int x = 0; x < surface->w; x++)

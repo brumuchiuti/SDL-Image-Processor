@@ -6,8 +6,19 @@
 
 #include "image_processor.h"
 
+// Output file path for saving processed images
 #define OUTPUT_IMAGE_PATH "output_image.png"
 
+/**
+ * save_current_image_to_png - Saves the current image surface to a PNG file.
+ * @state: Pointer to the application state containing the image surface
+ *
+ * Returns: true if save is successful, false otherwise
+ *
+ * This function exports the currently displayed image (whether original or
+ * equalized) to the OUTPUT_IMAGE_PATH. If the file already exists, it will
+ * be overwritten. Errors are logged to stderr.
+ */
 static bool save_current_image_to_png(const ApplicationState *state)
 {
     if (!state || !state->image_surface)

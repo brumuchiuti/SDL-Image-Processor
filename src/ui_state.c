@@ -8,6 +8,20 @@
 
 #include "image_processor.h"
 
+/**
+ * init_ui_state - Initializes the application state from an image file.
+ * @state: Pointer to the ApplicationState structure to initialize
+ * @image_file_path: Path to the image file to load
+ *
+ * Returns: true if initialization is successful, false otherwise
+ *
+ * This function:
+ * 1. Loads the image using SDL_image (IMG_Load)
+ * 2. Converts to RGBA32 format for consistent processing
+ * 3. Detects and converts to grayscale if necessary
+ * 4. Creates a backup copy of the grayscale surface for reverting
+ * 5. Calculates the histogram and statistical analysis
+ */
 bool init_ui_state(ApplicationState *state, const char *image_file_path)
 {
     memset(state, 0, sizeof(ApplicationState));
@@ -35,6 +49,7 @@ bool init_ui_state(ApplicationState *state, const char *image_file_path)
         convert_to_grayscale(state->image_surface);
     }
 
+    // Create a backup copy of the grayscale surface for reverting changes
     state->original_grayscale_surface = SDL_DuplicateSurface(state->image_surface);
     if (state->original_grayscale_surface == NULL)
     {
@@ -43,17 +58,20 @@ bool init_ui_state(ApplicationState *state, const char *image_file_path)
         return false;
     }
 
+    // Calculate histogram and statistical analysis
     calculate_histogram(state->image_surface, state->histogram_frequencies);
     analyse_histogram(state);
 
     return true;
 }
 
+// Analyzes histogram to calculate mean intensity and standard deviation
 void analyse_histogram(ApplicationState *state)
 {
     long long total_pixels = 0;
     long long weighted_sum = 0;
 
+    // Calculate total pixels and weighted sum for mean
     for (int i = 0; i < 256; i++)
     {
         total_pixels += state->histogram_frequencies[i];
