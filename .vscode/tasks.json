@@ -1,9 +1,41 @@
 {
     "tasks": [
         {
-            "label": "Compilar e executar Windows (MinGW: mingw32-make -> main.exe)",
+            "label": "Compilar e executar Windows (MinGW: mingw32-make)",
             "type": "shell",
-            "command": "mingw32-make; if ($?) { .\\main.exe images\\405.jpg}",
+            "command": "mingw32-make; if ($?) { .\\main.exe images\\${input:EscolherExemplo}}",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compilar e executar Linux (run.sh)",
+            "type": "shell",
+            "command": "./run.sh images/${input:EscolherExemplo}",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compilar e executar Linux [Debug] (run.sh)",
+            "type": "shell",
+            "command": "./debug.sh images/${input:EscolherExemplo}",
             "args": [],
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -17,5 +49,18 @@
             }
         }
     ],
+    "inputs": [
+    {
+      "id": "EscolherExemplo",
+      "type": "pickString",
+      "description": "Escolha a imagem para testar:",
+      "options": [
+        "405.jpg",
+        "araras.png",
+        "black.jpg",
+        "white.jpg"
+      ],
+    }      
+  ],
     "version": "2.0.0"
 }

@@ -193,7 +193,9 @@ além de documentar o processo de compilação e execução feito com o auxílio
 
 <br>
 
-## Colocando em funcionamento Windows: Atalho VS Code
+## Colocando em funcionamento
+
+### Windows: Atalho VS Code
 
 Aperte `CTRL+SHIFT+P` e então selecione :
 
