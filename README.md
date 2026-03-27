@@ -242,8 +242,6 @@ $ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
 > [!WARNING] Important
 > Toda vez que alterar alguma flag de configuração do CMake ou alterou o arquivo `CMakeLists.txt`, é necessário limpar o cache com `$ cmake --build build --target clean` e depois reconfigurar o projeto com os comandos da etapa `2.` ou `2.1.`.
 
-## Compilação e Execução
-
 Conceda permissão de execução aos scripts (necessário apenas na primeira vez):
 
 ```bash
