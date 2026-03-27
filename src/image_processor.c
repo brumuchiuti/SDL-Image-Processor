@@ -62,11 +62,13 @@ void convert_to_grayscale(SDL_Surface *surface)
 
 void calculate_histogram(SDL_Surface *surface, int histogram[256])
 {
+    // Initialize histogram array to zero
     memset(histogram, 0, sizeof(int) * 256);
     if (!surface)
         return;
 
     Uint8 *pixels = (Uint8 *)surface->pixels;
+    // Count frequency of each intensity level (0-255)
     for (int y = 0; y < surface->h; y++)
     {
         for (int x = 0; x < surface->w; x++)
