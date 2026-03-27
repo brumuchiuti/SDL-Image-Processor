@@ -49,6 +49,7 @@ bool init_ui_state(ApplicationState *state, const char *image_file_path)
         convert_to_grayscale(state->image_surface);
     }
 
+    // Create a backup copy of the grayscale surface for reverting changes
     state->original_grayscale_surface = SDL_DuplicateSurface(state->image_surface);
     if (state->original_grayscale_surface == NULL)
     {
@@ -57,17 +58,20 @@ bool init_ui_state(ApplicationState *state, const char *image_file_path)
         return false;
     }
 
+    // Calculate histogram and statistical analysis
     calculate_histogram(state->image_surface, state->histogram_frequencies);
     analyse_histogram(state);
 
     return true;
 }
 
+// Analyzes histogram to calculate mean intensity and standard deviation
 void analyse_histogram(ApplicationState *state)
 {
     long long total_pixels = 0;
     long long weighted_sum = 0;
 
+    // Calculate total pixels and weighted sum for mean
     for (int i = 0; i < 256; i++)
     {
         total_pixels += state->histogram_frequencies[i];
