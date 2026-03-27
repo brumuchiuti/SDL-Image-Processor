@@ -210,6 +210,39 @@ Em seguida, selecione o comando adequado ao seu sistema operacional (Windows ou 
 ```
 <br>
 
+### Linux
+Conceda permissão de execução aos scripts (necessário apenas na primeira vez):
+
+```bash
+$ chmod +x run.sh debug.sh
+```
+
+Utilize o script run.sh para compilar no modo `Release` e executar o projeto:
+
+```bash
+$ ./run.sh <path/to/image.png>
+```
+
+Exemplo de uso:
+
+```bash
+$ ./run.sh ../images/405.jpg
+```
+
+Ou, para compilar no modo `Debug` com sanitizers habilitados:
+
+```bash
+$ ./debug.sh <path/to/image.png>
+```
+
+Exemplo de uso:
+
+```bash
+$ ./debug.sh ../../images/405.jpg
+```
+
+Ou, use atalho VS Code
+
 ## Resultados
 
 ### Imagens uniformes
