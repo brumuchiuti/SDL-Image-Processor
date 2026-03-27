@@ -176,11 +176,27 @@ main(argc, argv)
 <br>
 
 ## Contribuições
-TODO
+#### Bruna
+Implementou a biblioteca TTF para escrever as mensagens que melhoraram a compreensão do projeto, com uma reestruturação
+das funcionalidades de exibição dos resultados, além de documentar junto de Jéssica, o funcionamento do programa.
+
+#### Gabriel
+Organizou a estrutura do projeto e implementou as funcionalidades para exibição das telas, além de documentar a estruturação
+do projeto.
+
+#### Jéssica
+Documentou todo o funcionamento do projeto junto de Bruna, desde os objetivos iniciais até os resultados alcançados, complementando a documentação
+feita pelo Gabriel.
+
+#### Lucas
+Refatorou a inclusão das dependências para tornar o projeto mais leve e mais rápido para ser baixado,
+além de documentar o processo de compilação e execução feito com o auxílio das ferramentas do VS Code.
 
 <br>
 
 ## Colocando em funcionamento
+
+### Linux
 
 1. Clone o repositório do projeto:
 
@@ -215,7 +231,7 @@ $ cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
 
 <br>
 
-## Compilação e Execução
+#### Compilação e Execução
 
 Conceda permissão de execução aos scripts (necessário apenas na primeira vez):
 
@@ -245,6 +261,30 @@ Exemplo de uso:
 
 ```bash
 $ ./debug.sh ../../images/405.jpg
+```
+
+### Windows: Atalho VS Code
+
+#### Compilação e Execução
+Aperte `CTRL+SHIFT+P` e então selecione :
+
+```bash
+> Tasks: Run Task
+```
+
+Em seguida, selecione o comando adequado ao seu sistema operacional (Windows ou Linux), ex:
+
+```bash
+> Compilar e executar Windows (MinGW: mingw32-make -> main.exe)
+```
+#### Compilação (Raiz do projeto)
+```bash
+mingw32-make
+```
+
+#### Execução
+```bash
+main
 ```
 
 <br>
@@ -308,3 +348,10 @@ A equalização redistribui os níveis de intensidade ao longo de toda a faixa.
 <br>
 
 ## Referências
+- MATTHIAS. **Rendering Image Files with any format (SDL3_image) - Free Pascal meets SDL**. Disponível em: <https://freepascal-meets-sdl.net/rendering-image-files-with-any-format-sdl3_image/>. Acesso em: 27 mar. 2026.
+- **Get Started with C++ and Mingw-w64 in Visual Studio Code**. Disponível em: <https://code.visualstudio.com/docs/cpp/config-mingw>.
+- **ngnu.org**. Disponível em: <https://www.gnu.org/software/make/>.
+- LIBSDL-ORG.**Simple DirectMedia Layer (SDL) Version 3.0**. Disponível em: <https://github.com/libsdl-org/SDL>.
+- LIBSDL-ORG. **GitHub - libsdl-org/SDL_image: Image decoding for many popular formats for Simple Directmedia Layer**. Disponível em: <https://github.com/libsdl-org/SDL_image>.
+- LIBSDL-ORG. **GitHub - libsdl-org/SDL_ttf: Support for TrueType (.ttf) font files with Simple Directmedia Layer**. Disponível em: <https://github.com/libsdl-org/SDL_ttf>.
+- Materiais de Aula.
