@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <string.h>
 
+// List of supported image file extensions
 static const char* ALLOWED_EXTENSIONS[] = {
     "png",
     "jpg",
@@ -8,6 +9,14 @@ static const char* ALLOWED_EXTENSIONS[] = {
 };
 static const int NUM_ALLOWED_EXTENSIONS = sizeof(ALLOWED_EXTENSIONS) / sizeof(ALLOWED_EXTENSIONS[0]);
 
+/**
+ * has_allowed_extension - Validates if a filename has a supported image format extension.
+ * @filename: The file path or name to validate
+ *
+ * Returns: true if the file has a supported extension, false otherwise
+ *
+ * Supported formats: PNG, JPG, BMP (case-insensitive comparison)
+ */
 bool has_allowed_extension(const char* filename) {
     const char* extension = strrchr(filename, '.');
     if (!extension || extension == filename) {

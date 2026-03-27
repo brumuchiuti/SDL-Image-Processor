@@ -5,6 +5,19 @@
 
 #include "utils.h"
 
+/**
+ * load_image - Loads an image file and converts it to RGBA32 format.
+ * @filename: Path to the image file (must have .png, .jpg, or .bmp extension)
+ *
+ * Returns: Pointer to SDL_Surface with RGBA32 format, or NULL on error
+ *
+ * This function:
+ * 1. Validates the file extension (PNG, JPG, BMP only)
+ * 2. Loads the image using SDL_image
+ * 3. Converts to RGBA32 format for consistent processing across all modules
+ * 4. Locks the surface for pixel-level access
+ * 5. Reports errors to stderr
+ */
 SDL_Surface* load_image(const char *filename) {
     if (!has_allowed_extension(filename)) {
         fprintf(stderr, "Unsupported file format: %s\n", filename);

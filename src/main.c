@@ -14,7 +14,8 @@
 #include "ui_view.h"
 #include "utils.h"
 
-
+// Main entry point for SDL Image Processor application
+// Handles argument validation, SDL initialization, and main event loop
 int main(int argc, char const *argv[])
 {
     if (argc != 2) {

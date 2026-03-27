@@ -1,6 +1,16 @@
 #include "image_processor.h"
 #include <string.h>
 
+/**
+ * is_grayscale - Checks if an SDL_Surface is already in grayscale format.
+ * @surface: The SDL_Surface to analyze
+ *
+ * Returns: true if all pixels have equal R, G, B channels; false otherwise
+ *
+ * This function iterates through all pixels and verifies that the red,
+ * green, and blue channels have identical values, which indicates the
+ * image is in grayscale format.
+ */
 bool is_grayscale(SDL_Surface *surface)
 {
     Uint8 *pixels = (Uint8 *)surface->pixels;
